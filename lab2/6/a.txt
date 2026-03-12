@@ -1,0 +1,22 @@
+Syscall: 56, 18874385, 0, 0                                     ; clone - create child process
+Syscall: 273, 140356722453024, 24, 0                            ; fcntl - file control operations
+Syscall: 273, 140356722453024, 24, 0                            ; fcntl - file control operations
+Syscall: 14, 2, 140729126764848, 0                              ; rt_sigprocmask - signal mask operations
+Syscall: 14, 2, 140729126764848, 0                              ; rt_sigprocmask - signal mask operations
+Syscall: 101, 0, 0, 0                                           ; ptrace
+Syscall: 101, 0, 0, 0                                           ; ptrace
+Syscall: 12, 0, 140356724460224, 0                              ; brk - change data segment size
+Syscall: 12, 0, 140356724460224, 0                              ; brk - change data segment size
+Syscall: 12, 94637158715392, 140356724460224, 94637158580224    ; brk - change data segment size
+Syscall: 12, 94637158715392, 140356724460224, 94637158580224    ; brk - change data segment size
+Syscall: 257, 18446744073709551516, 94636574674954, 1089        ; openat - open file at directory fd
+Syscall: 257, 18446744073709551516, 94636574674954, 1089        ; openat - open file at directory fd
+Syscall: 8, 3, 0, 2                                             ; lseek - reposition file offset
+Syscall: 8, 3, 0, 2                                             ; lseek - reposition file offset
+Syscall: 5, 3, 140729126764768, 140356724453088                 ; fstat - file statistics
+Syscall: 5, 3, 140729126764768, 140356724453088                 ; fstat - file statistics
+Syscall: 1, 3, 94637158580720, 5                                ; write - write to file descriptor
+Syscall: 1, 3, 94637158580720, 5                                ; write - write to file descriptor
+Syscall: 3, 3, 94637158580720, 140356724453088                  ; close - close file descriptor
+Syscall: 3, 3, 94637158580720, 140356724453088                  ; close - close file descriptor
+Syscall: 231, 0, 18446744073709551536, 140356722453064          ; exit_group - exit all threads

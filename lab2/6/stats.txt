@@ -1,0 +1,63 @@
+Prepended http:// to 'google.com'
+--2026-02-26 15:59:19--  http://google.com/
+Resolving google.com (google.com)... 64.233.164.102, 64.233.164.138, 64.233.164.100, ...
+Connecting to google.com (google.com)|64.233.164.102|:80... connected.
+HTTP request sent, awaiting response... 301 Moved Permanently
+Location: http://www.google.com/ [following]
+--2026-02-26 15:59:19--  http://www.google.com/
+Resolving www.google.com (www.google.com)... 74.125.205.105, 74.125.205.104, 74.125.205.147, ...
+Connecting to www.google.com (www.google.com)|74.125.205.105|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/html]
+Saving to: ‘index.html’
+
+     0K .......... .........                                    257K=0,08s
+
+2026-02-26 15:59:20 (257 KB/s) - ‘index.html’ saved [20133]
+
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 21,21    0,001450          14       102           write
+ 11,70    0,000800           8       100           mmap
+  9,20    0,000629         629         1           execve
+  7,56    0,000517           5        98         2 ioctl
+  7,09    0,000485           5        91           getpgrp
+  6,89    0,000471          23        20           pselect6
+  6,14    0,000420          10        42        10 connect
+  5,84    0,000399           6        62           read
+  4,26    0,000291           5        53        14 openat
+  3,38    0,000231           4        50           close
+  2,44    0,000167          11        15           recvfrom
+  1,96    0,000134           6        20        10 newfstatat
+  1,78    0,000122           2        44           fstat
+  1,75    0,000120           7        17           clock_gettime
+  1,67    0,000114           9        12           socket
+  1,26    0,000086           6        14           getsockname
+  0,94    0,000064           2        23           mprotect
+  0,82    0,000056          28         2           sendmmsg
+  0,67    0,000046           7         6           poll
+  0,63    0,000043           3        14           rt_sigprocmask
+  0,50    0,000034           6         5           munmap
+  0,48    0,000033          16         2           sendto
+  0,35    0,000024           6         4           recvmsg
+  0,16    0,000011           5         2           bind
+  0,15    0,000010           5         2           pread64
+  0,15    0,000010           5         2           setsockopt
+  0,15    0,000010           5         2           statfs
+  0,13    0,000009           1         6           futex
+  0,12    0,000008           1         5           lseek
+  0,10    0,000007           7         1         1 access
+  0,10    0,000007           7         1           getpeername
+  0,10    0,000007           2         3           uname
+  0,09    0,000006           1         5           rt_sigaction
+  0,07    0,000005           1         4           brk
+  0,04    0,000003           3         1           arch_prctl
+  0,04    0,000003           3         1           set_tid_address
+  0,04    0,000003           3         1           set_robust_list
+  0,04    0,000003           3         1           rseq
+  0,00    0,000000           0         1           getuid
+  0,00    0,000000           0         1           getgroups
+  0,00    0,000000           0         1           prlimit64
+  0,00    0,000000           0         2           getrandom
+------ ----------- ----------- --------- --------- ----------------
+100,00    0,006838           8       839        37 total
