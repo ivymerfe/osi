@@ -6,113 +6,128 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-int parse_cmd(char* cmd) {
-  if (!strcmp(cmd, "mkdir"))
-    return 1;
-  else if (!strcmp(cmd, "ls"))
-    return 2;
-  else if (!strcmp(cmd, "rmdir"))
-    return 3;
-  else if (!strcmp(cmd, "mkfile"))
-    return 4;
-  else if (!strcmp(cmd, "read"))
-    return 5;
-  else if (!strcmp(cmd, "rm"))
-    return 6;
-  else if (!strcmp(cmd, "symlink"))
-    return 7;
-  else if (!strcmp(cmd, "readlink"))
-    return 8;
-  else if (!strcmp(cmd, "linkdata"))
-    return 9;
-  else if (!strcmp(cmd, "rmlink"))
-    return 10;
-  else if (!strcmp(cmd, "hard"))
-    return 11;
-  else if (!strcmp(cmd, "rmhard"))
-    return 12;
-  else if (!strcmp(cmd, "stat"))
-    return 13;
-  else if (!strcmp(cmd, "chmod"))
-    return 14;
-  return -1;
+typedef enum {
+  CMD_MKDIR = 1,
+  CMD_LS = 2,
+  CMD_RMDIR = 3,
+  CMD_MKFILE = 4,
+  CMD_READ = 5,
+  CMD_RM = 6,
+  CMD_SYMLINK = 7,
+  CMD_READLINK = 8,
+  CMD_LINKDATA = 9,
+  CMD_RMLINK = 10,
+  CMD_HARD = 11,
+  CMD_RMHARD = 12,
+  CMD_STAT = 13,
+  CMD_CHMOD = 14,
+  CMD_INVALID = -1
+} Command;
+
+typedef struct {
+  const char* name;
+  Command code;
+} CommandDef;
+
+CommandDef commands[] = {{"mkdir", CMD_MKDIR},       {"ls", CMD_LS},
+                         {"rmdir", CMD_RMDIR},       {"mkfile", CMD_MKFILE},
+                         {"read", CMD_READ},         {"rm", CMD_RM},
+                         {"symlink", CMD_SYMLINK},   {"readlink", CMD_READLINK},
+                         {"linkdata", CMD_LINKDATA}, {"rmlink", CMD_RMLINK},
+                         {"hard", CMD_HARD},         {"rmhard", CMD_RMHARD},
+                         {"stat", CMD_STAT},         {"chmod", CMD_CHMOD},
+                         {NULL, CMD_INVALID}};
+Command parse_cmd(const char* cmd) {
+  for (int i = 0; commands[i].name; i++)
+    if (!strcmp(cmd, commands[i].name))
+      return commands[i].code;
+  return CMD_INVALID;
+}
+
+void read_file(int fd) {
+  char buf[4096];
+  int n;
+  while ((n = read(fd, buf, sizeof(buf))) > 0)
+    write(1, buf, n);
+  close(fd);
 }
 
 int main(int argc, char* argv[]) {
   char* cmd = strrchr(argv[0], '/');
   cmd = cmd ? cmd + 1 : argv[0];
+
   switch (parse_cmd(cmd)) {
-    case 1:
+    case CMD_MKDIR:
       mkdir(argv[1], 0755);
       break;
-    case 2: {
+    case CMD_LS: {
       DIR* d = opendir(argv[1]);
-      struct dirent* e;
-      while ((e = readdir(d)))
-        printf("%s\n", e->d_name);
-      closedir(d);
+      if (d) {
+        struct dirent* e;
+        while ((e = readdir(d)))
+          printf("%s\n", e->d_name);
+        closedir(d);
+      }
       break;
     }
-    case 3:
+    case CMD_RMDIR:
       rmdir(argv[1]);
       break;
-    case 4: {
-      int fd = open(argv[1], O_CREAT | O_WRONLY);
-      close(fd);
+    case CMD_MKFILE: {
+      int fd = open(argv[1], O_CREAT | O_WRONLY, 0644);
+      if (fd >= 0)
+        close(fd);
       break;
     }
-    case 5: {
-      char buf[256];
+    case CMD_READ: {
       int fd = open(argv[1], O_RDONLY);
-      int n;
-      while ((n = read(fd, buf, sizeof(buf))) > 0)
-        write(1, buf, n);
-      close(fd);
+      if (fd >= 0)
+        read_file(fd);
       break;
     }
-    case 6:
+    case CMD_RM:
+    case CMD_RMLINK:
+    case CMD_RMHARD:
       unlink(argv[1]);
       break;
-    case 7:
+    case CMD_SYMLINK:
       symlink(argv[1], argv[2]);
       break;
-    case 8: {
+    case CMD_READLINK: {
       char buf[256];
       int n = readlink(argv[1], buf, sizeof(buf) - 1);
-      buf[n] = 0;
-      printf("%s\n", buf);
+      if (n >= 0) {
+        buf[n] = 0;
+        printf("%s\n", buf);
+      }
       break;
     }
-    case 9: {
+    case CMD_LINKDATA: {
       char buf[256];
       int n = readlink(argv[1], buf, sizeof(buf) - 1);
-      buf[n] = 0;
-      int fd = open(buf, O_RDONLY);
-      while ((n = read(fd, buf, sizeof(buf))) > 0)
-        write(1, buf, n);
-      close(fd);
+      if (n >= 0) {
+        buf[n] = 0;
+        int fd = open(buf, O_RDONLY);
+        if (fd >= 0)
+          read_file(fd);
+      }
       break;
     }
-    case 10:
-      unlink(argv[1]);
-      break;
-    case 11:
+    case CMD_HARD:
       link(argv[1], argv[2]);
       break;
-    case 12:
-      unlink(argv[1]);
-      break;
-    case 13: {
+    case CMD_STAT: {
       struct stat st;
-      stat(argv[1], &st);
-      printf("perms: %o\n", st.st_mode & 0777);
-      printf("hard: %ld\n", st.st_nlink);
+      if (stat(argv[1], &st) == 0) {
+        printf("perms: %o\n", st.st_mode & 0777);
+        printf("hard: %ld\n", st.st_nlink);
+      }
       break;
     }
-    case 14:
+    case CMD_CHMOD:
       chmod(argv[1], strtol(argv[2], NULL, 8));
       break;
-    default:
+    case CMD_INVALID:
       fprintf(stderr, "bad cmd: %s\n", cmd);
       return 1;
   }

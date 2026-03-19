@@ -79,8 +79,10 @@ void print_pagemap(pid_t pid) {
   while (fgets(line, sizeof(line), maps) != NULL) {
     unsigned long start = 0, end = 0;
     char perms[8] = {0};
+    char pathname[256] = {0};
 
-    if (sscanf(line, "%lx-%lx %7s", &start, &end, perms) != 3) {
+    if (sscanf(line, "%lx-%lx %7s %*s %*s %*s %255s", &start, &end, perms,
+               pathname) < 3) {
       continue;
     }
     if (end <= start) {
@@ -96,9 +98,9 @@ void print_pagemap(pid_t pid) {
       if (!e.present && !e.swapped) {
         continue;
       }
-      printf("0x%016" PRIx64 " 0x%016" PRIx64 " %-6u %-6u %-6u %-6u %-6u\n",
+      printf("0x%016" PRIx64 " 0x%016" PRIx64 " %-6u %-6u %-6u %-6u %-6u %s\n",
              addr, e.pfn, e.soft_dirty, e.file_page, e.swapped, e.present,
-             e.reserved);
+             e.reserved, pathname);
       printed++;
       if (printed >= max_print) {
         printf("limited to %lu entries\n", max_print);
