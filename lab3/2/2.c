@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
       rmdir(argv[1]);
       break;
     case 4: {
-      int fd = open(argv[1], O_CREAT | O_WRONLY, 0644);
+      int fd = open(argv[1], O_CREAT | O_WRONLY);
       close(fd);
       break;
     }
