@@ -9,7 +9,7 @@ int main() {
   void* pointers[100];
 
   for (int i = 0; i < 100; i++) {
-    pointers[i] = malloc(1024 * 1024);
+    pointers[i] = malloc(1024 * 8);
     sleep(1);
   }
   for (int i = 0; i < 100; i++) {
