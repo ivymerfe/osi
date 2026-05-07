@@ -1,8 +1,10 @@
+#define _GNU_SOURCE
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 volatile sig_atomic_t sig_stop = 0;
 void int_handler(int sig) {
@@ -41,6 +43,9 @@ int main() {
   int pip[2];
   pipe(pip);
   signal(SIGINT, int_handler);
+
+  int size = fcntl(pip[0], F_GETPIPE_SZ);
+  printf("Pipe size: %d bytes\n", size);
 
   pid_t writer_pid = fork();
   if (writer_pid == 0) {

@@ -6,9 +6,7 @@
 #include <unistd.h>
 
 void child_main(int pip[2]) {
-  close(pip[1]);
   dup2(pip[0], STDIN_FILENO);
-  close(pip[0]);
 
   char buf[256];
   while (fgets(buf, sizeof(buf), stdin) != NULL) {
@@ -18,9 +16,7 @@ void child_main(int pip[2]) {
 }
 
 void parent_main(int pip[2]) {
-  close(pip[0]);
   dup2(pip[1], STDOUT_FILENO);
-  close(pip[1]);
 
   printf("Hi\n");
   printf("Bitch\n");
